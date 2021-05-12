@@ -1,0 +1,21 @@
+flyway:
+  validateOnMigrate: false
+spring:
+  datasource:
+    platform: postgres
+    driver-class-name: org.postgresql.Driver
+    password: @maven.db.password@
+    testWhileIdle: true
+    url: @maven.db.url@
+    username: @maven.db.username@
+    validationQuery: SELECT 1
+  jackson:
+    serialization-inclusion: non_null
+  jpa:
+    database: POSTGRESQL
+    hibernate:
+      ddl-auto: validate
+      dialect: org.hibernate.dialect.PostgreSQL9Dialect
+      naming:
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+    show-sql: true
