@@ -1,4 +1,4 @@
-package com.anlohse.minesweeper.commons;
+package com.anlohse.minesweeper.commons.config;
 
 import lombok.*;
 import org.springframework.boot.context.properties.ConfigurationProperties;

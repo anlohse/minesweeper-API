@@ -72,7 +72,7 @@ public class AuthenticationService implements UserDetailsService, Serializable {
 
 		@Override
 		public String getPassword() {
-			return "********";
+			return user.getPassword();
 		}
 
 		@Override

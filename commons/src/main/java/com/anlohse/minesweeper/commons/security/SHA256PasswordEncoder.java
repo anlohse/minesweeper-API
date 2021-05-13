@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component("passwordEncoder2")
 public class SHA256PasswordEncoder implements PasswordEncoder {
 
-	@Value("${videotube.config.password.salty}")
+	@Value("${minesweeper.config.salty.password}")
 	private String passwordSalty;
 	
 	@Override

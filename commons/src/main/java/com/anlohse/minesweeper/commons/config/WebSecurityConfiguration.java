@@ -32,9 +32,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Autowired
 	SHA256PasswordEncoder sha256PasswordEncoder;
 	
-	@Value("${app.debug}")
-	Boolean debugMode;
-
 	@Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}")
 	String jwkSetUri;
 

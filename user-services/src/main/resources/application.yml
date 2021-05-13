@@ -1,2 +1,7 @@
 server:
   port: 8081
+minesweeper:
+  security:
+    keystorePath: ./keystore/keystore.jks
+    alias: minesweeper
+    password: minesweeper12

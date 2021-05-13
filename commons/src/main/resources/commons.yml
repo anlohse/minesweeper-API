@@ -1,6 +1,17 @@
 minesweeper:
   siteName: Minesweeper-io
   siteAddress: localhost:3000
+  config:
+    salty:
+      password: '@maven.salty.password@'
+      activation: '@maven.salty.activation@'
+      recover: '@maven.salty.recover@'
+    mail:
+      smtpHost: @maven.mail.host@
+      smtpPort: @maven.mail.port@
+      fromMail: ${mail.from}
+      user: ${mail.user}
+      pass: ${mail.pass}
 flyway:
   validateOnMigrate: false
 spring:
@@ -22,3 +33,8 @@ spring:
       naming:
         physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
     show-sql: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8081/api/.well-known/jwks.json

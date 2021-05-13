@@ -1,5 +1,6 @@
 package com.anlohse.minesweeper.commons.config;
 
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -10,6 +11,7 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import java.util.Locale;
 
 @Configuration
+@EntityScan("com.anlohse.minesweeper.commons.entities")
 @EnableJpaRepositories("com.anlohse.minesweeper.commons.repositories")
 public class CommonsConfig {
 
