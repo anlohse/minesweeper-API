@@ -4,7 +4,7 @@ A minesweeper game api
 ## Project structure
 The project is divided into three modules:
 * commons - In this project are defined all common classes for api and user-services;
-* minesweeper-api - This is the game implementation and depends on commons;
+* minesweeper-backend - This is the game implementation and depends on commons;
 * user-services - Provides all user features including the security token.
 
 ## Frameworks

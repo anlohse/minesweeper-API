@@ -35,7 +35,7 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
-				<maven.db.url>jdbc:postgresql://postgres:5432/minesweeper</maven.db.url>
+				<maven.db.url>jdbc:postgresql://localhost:5433/minesweeper</maven.db.url>
 				<maven.db.username>postgres</maven.db.username>
 				<maven.db.password>postgres</maven.db.password>
 				<maven.db.show_sql>true</maven.db.show_sql>
@@ -51,6 +51,14 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -87,6 +95,12 @@
 	</dependencies>
 
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
