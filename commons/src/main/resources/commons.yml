@@ -1,6 +1,6 @@
 minesweeper:
   siteName: Minesweeper-io
-  siteAddress: localhost:3000
+  siteAddress: 'http://localhost:3000'
   config:
     salty:
       password: '@maven.salty.password@'
