@@ -6,3 +6,4 @@ target
 /minesweeper-backend/minesweeper-backend.iml
 /user-services/user-services.iml
 /commons/commons.iml
+node_modules

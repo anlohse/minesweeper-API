@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import static com.anlohse.minesweeper.commons.mapper.MinesweeperMatchMapper.INSTANCE;
 
 @RestController
-@RequestMapping("api/match")
+@RequestMapping("api/game/match")
 public class MatchController {
 
     @Autowired
