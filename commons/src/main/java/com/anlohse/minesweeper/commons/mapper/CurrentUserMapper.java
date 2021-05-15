@@ -10,8 +10,6 @@ public interface CurrentUserMapper {
 
     CurrentUserMapper INSTANCE = Mappers.getMapper(CurrentUserMapper.class);
 
-    User voToUser(CurrentUserVO vo);
-
     CurrentUserVO userToVO(User entity);
 
 }

@@ -22,6 +22,10 @@ public abstract class AbstractCrudService<T extends AbstractEntity, ID> {
         return repository.save(entity);
     }
 
+    public void saveAll(Iterable<T> entities) {
+        entities.forEach(this::save);
+    }
+
     public void delete(T entity) {
 		entity.setDeleteTime(new Date());
 		repository.save(entity);

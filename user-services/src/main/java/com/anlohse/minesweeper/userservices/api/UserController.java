@@ -28,48 +28,48 @@ public class UserController {
 	private LocaleResolver localeResolver;
 
 	@PreAuthorize("!hasAuthority('SCOPE_user')")
-	@RequestMapping(method = RequestMethod.POST)
+	@PostMapping
 	public ResponseEntity<UserVO> createNew(@RequestBody @Valid UserVO user) throws Exception {
 		userService.createNew(user);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
 	@PreAuthorize("!hasAuthority('SCOPE_user')")
-	@RequestMapping(method = RequestMethod.POST, value = "resendActivation")
+	@PostMapping("resendActivation")
 	public ResponseEntity<UserVO> resendActivationCode(@RequestParam(value = "email", required = true) String email, HttpServletRequest request) throws Exception {
 		userService.resendActivationCode(email);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
 	@PreAuthorize("hasAuthority('SCOPE_user')")
-	@RequestMapping(method = RequestMethod.PATCH)
+	@PatchMapping
 	public ResponseEntity<UserVO> update(@RequestBody @Valid UserVO user) {
 		userService.update(user);
 		return ResponseEntity.ok().build();
 	}
 
 	@PreAuthorize("hasAuthority('SCOPE_user')")
-	@RequestMapping(method = RequestMethod.GET, value = "/current")
+	@GetMapping("/current")
 	public ResponseEntity<CurrentUserVO> update() {
-		return ResponseEntity.ok(userService.currentUser());
+		return ResponseEntity.ok(userService.currentUserVo());
 	}
 
 	@PreAuthorize("!hasAuthority('SCOPE_user')")
-	@RequestMapping(method = RequestMethod.POST, value = "/activate/{activationCode}")
+	@PostMapping("/activate/{activationCode}")
 	public ResponseEntity<CurrentUserVO> activate(@PathVariable("activationCode") String activationCode) throws Exception {
 		userService.activate(activationCode);
 		return ResponseEntity.ok().build();
 	}
 
 	@PreAuthorize("!hasAuthority('SCOPE_user')")
-	@RequestMapping(method = RequestMethod.POST, value = "/recover/{email}")
+	@PostMapping("/recover/{email}")
 	public ResponseEntity<CurrentUserVO> generateRecover(@PathVariable("email") String email) throws Exception {
 		userService.generateRecover(email);
 		return ResponseEntity.ok().build();
 	}
 
 	@PreAuthorize("!hasAuthority('SCOPE_user')")
-	@RequestMapping(method = RequestMethod.POST, value = "/recover")
+	@PostMapping("/recover")
 	public ResponseEntity<CurrentUserVO> recover(
 			@RequestParam("recoverCode") String recoverCode,
 			@RequestParam("password") String password,

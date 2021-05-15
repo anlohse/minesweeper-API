@@ -6,7 +6,10 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "tbs_user", indexes = @Index(unique = true, columnList = "email", name = "uk_user_mail"))
+@Table(name = "tbs_user", indexes = {
+        @Index(unique = true, columnList = "email", name = "uk_user_mail"),
+        @Index(unique = true, columnList = "nickname", name = "uk_user_nick")
+})
 @Getter
 @Setter
 @EqualsAndHashCode(of = { "id" })
@@ -28,6 +31,9 @@ public class User extends AbstractEntity {
 
     @Column(length = 120, nullable = false)
     private String lastName;
+
+    @Column(length = 60, nullable = false)
+    private String nickname;
 
     @Column(length = 200, nullable = false)
     private String password;

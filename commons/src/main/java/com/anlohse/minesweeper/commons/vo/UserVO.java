@@ -32,9 +32,13 @@ public class UserVO {
 	@NotEmpty
 	private String lastName;
 
-	private String title;
+	@NotNull
+	@NotEmpty
+	private String nickname;
 	
 	private String password;
+
+	private String confirmPassword;
 
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date birthDate;

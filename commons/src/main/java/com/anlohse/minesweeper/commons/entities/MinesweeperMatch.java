@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "tbs_mines_match", indexes = @Index(unique = true, columnList = "user_id", name = "idx_user_match"))
+@Table(name = "tbs_mines_match", indexes = @Index(unique = false, columnList = "user_id", name = "idx_user_match"))
 @Getter
 @Setter
 @EqualsAndHashCode(of = { "id" })
@@ -38,6 +38,8 @@ public class MinesweeperMatch extends AbstractEntity {
     private int minesDiscovered;
 
     private int cleared;
+
+    private int score;
 
     private GameStatus status;
 

@@ -5,6 +5,7 @@ public enum MoveStatus {
     NONE,
     EASY,
     RISKY,
-    GAMEOVER;
+    GAMEOVER,
+    WIN;
 
 }

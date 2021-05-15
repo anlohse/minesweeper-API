@@ -51,13 +51,23 @@ public class UserService  extends AbstractCrudService<User, Long> {
         return (UserRepository) this.repository;
     }
 
-    public CurrentUserVO currentUser() {
+    public CurrentUserVO currentUserVo() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth.isAuthenticated()) {
             Long id = Long.parseLong(auth.getName());
             User user = repository.findById(id)
                     .orElseThrow(ResourceNotFoundException::new);
             return CurrentUserMapper.INSTANCE.userToVO(user);
+        }
+        return null;
+    }
+
+    public User currentUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth.isAuthenticated()) {
+            Long id = Long.parseLong(auth.getName());
+            return repository.findById(id)
+                    .orElseThrow(ResourceNotFoundException::new);
         }
         return null;
     }

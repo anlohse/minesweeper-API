@@ -29,7 +29,8 @@ public class MatchServiceTest {
         when(minesweeperMatchRepository.save(any())).thenAnswer(a -> a.getArguments()[0]);
         MinesweeperMatch match = matchService.newGame(10, 10, 10, 1234567L, User.builder().id(1L).build());
         byte[] data = Base64.decodeBase64(match.getData());
-        assertEquals(1, data.length);
+        assertEquals(100, data.length);
+        assertEquals(0x30, data[55]);
     }
 
 }
