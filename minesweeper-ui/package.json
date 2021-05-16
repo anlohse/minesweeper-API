@@ -6,15 +6,17 @@
   "author": "Alan N. Lohse",
   "license": "ISC",
   "scripts": {
-    "start": "tsc && parcel index.html --open --public-url ./",
-    "build": "tsc && parcel build index.html --public-url ./"
+    "start": "tsc && parcel index.html --open",
+    "build": "tsc && parcel build index.html"
   },
   "dependencies": {
     "@webcomponents/webcomponentsjs": "2.2.6",
-    "lit-element": "2.3.1"
+    "lit-element": "2.3.1",
+    "pubsub-js": "^1.9.3"
   },
   "devDependencies": {
     "@babel/core": "7.2.0",
+    "@types/pubsub-js": "^1.8.2",
     "parcel-bundler": "^1.6.1"
   },
   "keywords": []

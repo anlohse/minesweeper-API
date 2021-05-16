@@ -1,22 +1,17 @@
 import { LitElement, html, customElement, property, css } from 'lit-element';
-import './game-container';
+import './minecell';
 
-@customElement("minesweeper-app")
-class MinesweeperApp extends LitElement {
+@customElement("game-container")
+class GameContainer extends LitElement {
 
 	static get styles() {
 		return css`
-			:host {
-				display: block;
-			}
 			div.container {
 				display: flex;
 				flex-wrap: wrap;
 				width: 250px;
 				border-right: 1px solid #777;
 				border-bottom: 1px solid #777;
-				margin-left: auto;
-				margin-right: auto;
 			}
 		`;
 	}
@@ -28,8 +23,8 @@ class MinesweeperApp extends LitElement {
 
 	render() {
 		return html`
-			<div>
-				<game-container></game-container>
+			<div class="container">
+				${this.data.map((_n:number,i:number) => html`<mine-cell index="${i}" data="${this.data}"></mine-cell>`)}
 			</div>
   		`;
 	}
@@ -43,6 +38,6 @@ class MinesweeperApp extends LitElement {
 
 declare global {
 	interface HTMLElementTagNameMap {
-		'minesweeper-app': MinesweeperApp;
+		'game-container': GameContainer;
 	}
 }

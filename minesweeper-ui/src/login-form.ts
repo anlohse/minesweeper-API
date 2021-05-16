@@ -1,8 +1,7 @@
 import { LitElement, html, customElement, property, css } from 'lit-element';
-import './game-container';
 
-@customElement("minesweeper-app")
-class MinesweeperApp extends LitElement {
+@customElement("login-form")
+class LoginForm extends LitElement {
 
 	static get styles() {
 		return css`
@@ -10,8 +9,6 @@ class MinesweeperApp extends LitElement {
 				display: block;
 			}
 			div.container {
-				display: flex;
-				flex-wrap: wrap;
 				width: 250px;
 				border-right: 1px solid #777;
 				border-bottom: 1px solid #777;
@@ -22,9 +19,9 @@ class MinesweeperApp extends LitElement {
 	}
 
 	@property({
-		type: "Array"
+		type: "Object"
 	})
-	data: number[];
+	props: any;
 
 	render() {
 		return html`
@@ -36,13 +33,16 @@ class MinesweeperApp extends LitElement {
 
 	constructor() {
 		super();
-		this.data = [0,1,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0];
+		this.props = {
+			username: '',
+			password: ''
+		};
 	}
 
 }
 
 declare global {
 	interface HTMLElementTagNameMap {
-		'minesweeper-app': MinesweeperApp;
+		'login-form': LoginForm;
 	}
 }

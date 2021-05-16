@@ -7,3 +7,6 @@ target
 /user-services/user-services.iml
 /commons/commons.iml
 node_modules
+.cache
+/minesweeper-ui/dist
+/minesweeper-ui/js
