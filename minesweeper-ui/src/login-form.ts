@@ -1,4 +1,5 @@
-import { LitElement, html, customElement, property, css } from 'lit-element';
+import { LitElement, html, customElement, css } from 'lit-element';
+import http from './http-service';
 
 @customElement("login-form")
 class LoginForm extends LitElement {
@@ -10,33 +11,64 @@ class LoginForm extends LitElement {
 			}
 			div.container {
 				width: 250px;
-				border-right: 1px solid #777;
-				border-bottom: 1px solid #777;
+				border: 1px solid #777;
 				margin-left: auto;
 				margin-right: auto;
+				padding: 8px;
+			}
+			div.container div {
+				margin-top: 8px;
+			}
+			label, input, button {
+				display: block;
+			}
+			label {
+				width: 100%;
+			}
+			input {
+				padding: 2px;
+				width:calc(100% - 8px);
+			}
+			button {
+				width:100%;
 			}
 		`;
 	}
 
-	@property({
-		type: "Object"
-	})
-	props: any;
-
 	render() {
 		return html`
-			<div>
-				<game-container></game-container>
-			</div>
+			<form id="loginForm">
+				<input type="hidden" name="grant_type" value="password" />
+				<div class="container">
+					<div>
+						<label>Username:</label>
+						<input type="text" name="username"/>
+					</div>
+					<div>
+						<label>Password:</label>
+						<input type="password" name="password"/>
+					</div>
+					<div>
+						<button id="loginbutton" @click="${this.handleLogin}">Login</button>
+					</div>
+				</div>
+			</form>
   		`;
 	}
 
 	constructor() {
 		super();
-		this.props = {
-			username: '',
-			password: ''
-		};
+	}
+
+	handleLogin(e: any) {
+		e.preventDefault();
+		let formEl = this.shadowRoot?this.shadowRoot.getElementById('loginForm'):null;
+		if (!formEl) return;
+		var form = new FormData(<HTMLFormElement>formEl);
+		http.post('/oauth/token', { body: form, headers: {"Authorization": "Basic d3JpdGVyOjEyMw=="} })
+			.then((res: any) => {
+				console.log(res);
+			});
 	}
 
 }

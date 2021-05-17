@@ -3,7 +3,18 @@ import PubSub from 'pubsub-js';
 const TOPIC_NAME = 'minesweeper.credentials';
 const LOCAL_STORE_KEY = 'minesweeper.data.Iamback';
 
-const credentials = JSON.parse(localStorage.getItem(LOCAL_STORE_KEY) || '{ "authToken": null, "refreshToken": null }');
+interface CredentialTypes {
+
+	authToken: string;
+
+	refreshToken: string;
+
+};
+
+const credentials : CredentialTypes = JSON.parse(localStorage.getItem(LOCAL_STORE_KEY) || '{ "authToken": null, "refreshToken": null }');
+setTimeout(function(){
+	PubSub.publish(TOPIC_NAME, credentials);
+}, 1);
 
 const httpheaders = {
     /**
@@ -309,7 +320,7 @@ const httpheaders = {
 
 };
 
-const initStates = async () => {
+const initStates = () => {
     PubSub.subscribe(TOPIC_NAME, (_msg:any, value:any) => {
         Object.assign(credentials, value || {});
     });
@@ -461,7 +472,7 @@ const RestService = <TRestBase extends Constructor>(baseUrl:string, RestBase:TRe
     return clazz;
 };
 
-initStates().catch(e => console.error('Failed to subscribe', e));
+initStates();
 
 const moduleExports = { request, get, post, put, delete: http_delete, RestService, Headers: httpheaders };
 

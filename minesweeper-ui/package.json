@@ -15,9 +15,9 @@
     "pubsub-js": "^1.9.3"
   },
   "devDependencies": {
-    "@babel/core": "7.2.0",
     "@types/pubsub-js": "^1.8.2",
-    "parcel-bundler": "^1.6.1"
+    "http-proxy-middleware": "^2.0.0",
+    "parcel": "^2.0.0-beta.2"
   },
   "keywords": []
 }

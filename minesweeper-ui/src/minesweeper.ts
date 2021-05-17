@@ -1,5 +1,22 @@
 import { LitElement, html, customElement, property, css } from 'lit-element';
+import PubSub from 'pubsub-js';
+import http from './http-service';
+import './login-form';
 import './game-container';
+
+const TOPIC_NAME = 'minesweeper.credentials';
+
+interface UserData {
+	
+	id: number;
+
+	name: string;
+
+	lastName: string;
+
+	email: string;
+
+};
 
 @customElement("minesweeper-app")
 class MinesweeperApp extends LitElement {
@@ -26,17 +43,39 @@ class MinesweeperApp extends LitElement {
 	})
 	data: number[];
 
-	render() {
-		return html`
-			<div>
-				<game-container></game-container>
-			</div>
-  		`;
-	}
+	@property({
+		type: "Object"
+	})
+	userData: UserData | undefined;
 
 	constructor() {
 		super();
+		const assignUser = ((user:any) => {
+			this.userData = user;
+		}).bind(this);
+		const assignGame = ((_match:any) => {
+			
+		}).bind(this);
+		PubSub.subscribe(TOPIC_NAME, ((_msg:any, value:any) => {
+			if (!value.authToken)
+				this.userData = undefined;
+			else {
+				http.get('/api/user/current',{}).then(assignUser);
+				http.get('/api/match',{}).then(assignGame);
+			}
+		}).bind(this));
 		this.data = [0,1,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0];
+	}
+
+	render() {
+		return html`
+			<div>
+				${ !this.userData
+					? html`<login-form></login-form>`
+					: html`<game-container></game-container>`
+				}
+			</div>
+  		`;
 	}
 
 }
