@@ -15,7 +15,7 @@
         delete_time timestamp,
         last_updated timestamp,
         cleared int4 not null,
-        data varchar(255),
+        data text,
         end_time timestamp,
         height int4 not null,
         mines int4 not null,

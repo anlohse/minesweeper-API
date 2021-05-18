@@ -1,79 +1,140 @@
 import { LitElement, html, customElement, property, css } from 'lit-element';
+import { router, navigator } from 'lit-element-router';
 import PubSub from 'pubsub-js';
 import http from './http-service';
 import './login-form';
+import './register';
+import './activate';
 import './game-container';
+import logo from 'url:~/resources/minesweeper_icon.png';
+import { Match, UserData } from './types';
 
 const TOPIC_NAME = 'minesweeper.credentials';
 
-interface UserData {
-	
-	id: number;
-
-	name: string;
-
-	lastName: string;
-
-	email: string;
-
-};
-
 @customElement("minesweeper-app")
+@router
+@navigator
 class MinesweeperApp extends LitElement {
+
+	static get routes() {
+		return [{
+			name: 'home',
+			pattern: ''
+		}, {
+			name: 'login',
+			pattern: 'login'
+		}, {
+			name: 'register',
+			pattern: 'register'
+		}, {
+			name: 'activate',
+			pattern: 'activate/:activationCode'
+		}, {
+			name: 'recover',
+			pattern: 'recover/:recoveryCode'
+		}, {
+			name: 'not-found',
+			pattern: '*'
+		}];
+	}
 
 	static get styles() {
 		return css`
 			:host {
 				display: block;
-			}
-			div.container {
 				display: flex;
-				flex-wrap: wrap;
-				width: 250px;
-				border-right: 1px solid #777;
-				border-bottom: 1px solid #777;
-				margin-left: auto;
-				margin-right: auto;
+				flex-direction: column;
+				align-items: center;
+			}
+
+			.App {
+				background-color: #282c34;
+			}
+			  
+			.App-logo {
+				height: 20vmin;
+				pointer-events: none;
+			}
+			  
+			.App-header {
+				text-align: center;
+				min-height: 30vh;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				font-size: calc(10px + 2vmin);
+				color: white;
+			}
+			  
+			.App-link {
+				color: #61dafb;
 			}
 		`;
 	}
 
 	@property({
-		type: "Array"
-	})
-	data: number[];
-
-	@property({
-		type: "Object"
+		type: Object,
+		attribute: false
 	})
 	userData: UserData | undefined;
 
+	@property({
+		type: Object,
+		attribute: false
+	})
+	match: Match | undefined;
+
+	@property({ type: String })
+	route: string;
+	@property({ type: Object })
+	params: any;
+	@property({ type: Object })
+	query: any;
+
 	constructor() {
 		super();
-		const assignUser = ((user:any) => {
+		this.route = '';
+		const assignUser = ((user: any) => {
 			this.userData = user;
 		}).bind(this);
-		const assignGame = ((_match:any) => {
-			
-		}).bind(this);
-		PubSub.subscribe(TOPIC_NAME, ((_msg:any, value:any) => {
-			if (!value.authToken)
+		PubSub.subscribe(TOPIC_NAME, ((_msg: any, value: any) => {
+			if (!value.authToken) {
 				this.userData = undefined;
-			else {
-				http.get('/api/user/current',{}).then(assignUser);
-				http.get('/api/match',{}).then(assignGame);
+				if (this.route == 'home')
+					(<any>this).navigate("/login");
+			} else {
+				http.get('/api/user/current', {}).then(resp => resp.json().then(assignUser));
 			}
 		}).bind(this));
-		this.data = [0,1,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0];
+	}
+
+	router(route: string, params: any, query: any, data: any) {
+		this.route = route;
+		this.params = params;
+		this.query = query;
+		console.log(route, params, query, data);
 	}
 
 	render() {
 		return html`
-			<div>
-				${ !this.userData
-					? html`<login-form></login-form>`
-					: html`<game-container></game-container>`
+			<div class="App">
+				<header class="App-header">
+					<img src="${logo}" class="App-logo" alt="logo" />
+					<h2>
+						Minesweeper
+					</h2>
+				</header>
+
+				${
+					(this.route == 'home' ? html`<game-container></game-container>`
+				  : (this.route == 'login' ? html`<login-form></login-form>`
+				  : (this.route == 'register' ? html`<register-form></register-form>`
+				  : (this.route == 'activate' ? html`<activate-form code="${this.params.activationCode}"></activate-form>`
+				  : html`<h1>Not found</h1>`))))
+
 				}
+			
 			</div>
   		`;
 	}

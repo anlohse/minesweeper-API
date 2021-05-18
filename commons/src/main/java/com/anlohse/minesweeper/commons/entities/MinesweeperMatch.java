@@ -43,6 +43,7 @@ public class MinesweeperMatch extends AbstractEntity {
 
     private GameStatus status;
 
+    @Lob
     private String data;
 
 }

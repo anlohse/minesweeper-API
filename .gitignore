@@ -10,3 +10,4 @@ node_modules
 .cache
 /minesweeper-ui/dist
 /minesweeper-ui/js
+/minesweeper-ui/.parcel-cache

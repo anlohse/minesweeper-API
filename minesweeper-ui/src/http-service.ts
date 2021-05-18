@@ -330,7 +330,7 @@ const request = (url:string, options:any) : Promise<Response> => {
     options = options || { headers: {} };
     let authHeaders : any = {};
     if (credentials.authToken)
-        authHeaders['Authentication'] = 'Bearer ' + credentials.authToken;
+        authHeaders['Authorization'] = 'Bearer ' + credentials.authToken;
     let headers = Object.assign(options.headers || {}, authHeaders);
     return new Promise((resolve, reject) => {
         fetch(url, Object.assign({}, options || {}, { headers }))
@@ -338,16 +338,16 @@ const request = (url:string, options:any) : Promise<Response> => {
                 if (resp.status >= 400) {
                     let error : any = new Error('HTTP status ' + resp.status + ': ' + resp.statusText);
                     error.response = resp;
-                    reject(error);
-                }
-                resolve(resp);
+                    return reject(error);
+                } else
+                	return resolve(resp);
             })
             .catch(reject);
     });
 };
 
 const insertQueryParams = (url:string, params:any) => {
-    let url1 = url.indexOf('?') != -1 ? url + '?' : (url.indexOf('&') == url.length - 1 ? url : (url + '&'));
+    let url1 = url.indexOf('?') == -1 ? url + '?' : (url.indexOf('&') == url.length - 1 ? url : (url + '&'));
     Object.entries(params).forEach((e, i) => {
         url1 += (i == 0 ? '' : '&') + escape(e[0]) + '=' + escape(<string>e[1]);
     });
@@ -387,7 +387,7 @@ function createPostOptions(ent:any, options:any) {
     });
 }
 
-type Constructor = new (...args: any[]) => {};
+type Constructor<T = any> = new (...args: any[]) => T;
 
 const _RestService_create = <TRestBase extends Constructor>(baseUrl:string, RestBase:TRestBase) => {
     return class extends RestBase {
@@ -474,6 +474,6 @@ const RestService = <TRestBase extends Constructor>(baseUrl:string, RestBase:TRe
 
 initStates();
 
-const moduleExports = { request, get, post, put, delete: http_delete, RestService, Headers: httpheaders };
+const moduleExports = { request, get, post, put, delete: http_delete, RestService, Headers: httpheaders, createPostOptions };
 
 export default moduleExports;

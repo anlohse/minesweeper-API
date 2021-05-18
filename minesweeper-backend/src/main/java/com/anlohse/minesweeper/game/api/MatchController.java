@@ -1,10 +1,9 @@
 package com.anlohse.minesweeper.game.api;
 
 import com.anlohse.minesweeper.commons.entities.MinesweeperMatch;
-import com.anlohse.minesweeper.commons.exceptions.InvalidRequestException;
-import com.anlohse.minesweeper.commons.exceptions.ResourceNotFoundException;
 import com.anlohse.minesweeper.commons.services.MatchService;
 import com.anlohse.minesweeper.commons.services.UserService;
+import com.anlohse.minesweeper.commons.vo.DoMoveVO;
 import com.anlohse.minesweeper.commons.vo.GameMoveVO;
 import com.anlohse.minesweeper.commons.vo.MinesweeperMatchVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import static com.anlohse.minesweeper.commons.mapper.MinesweeperMatchMapper.INSTANCE;
 
 @RestController
-@RequestMapping("api/game/match")
+@RequestMapping("api/match")
 public class MatchController {
 
     @Autowired
@@ -40,8 +39,8 @@ public class MatchController {
 
     @PreAuthorize("hasAuthority('SCOPE_user')")
     @PostMapping
-    public ResponseEntity<GameMoveVO> doMove(@RequestParam("matchId") long matchId, @RequestParam("x") int x, @RequestParam("y") int y, @RequestParam("mark") boolean mark) {
-        GameMoveVO moveVO = matchService.doMove(matchId, x, y, mark);
+    public ResponseEntity<GameMoveVO> doMove(@RequestBody DoMoveVO vo) {
+        GameMoveVO moveVO = matchService.doMove(vo.getMatchId(), vo.getX(), vo.getY(), vo.isMark());
         return ResponseEntity.ok(moveVO);
     }
 

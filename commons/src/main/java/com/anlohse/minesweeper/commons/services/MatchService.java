@@ -4,6 +4,7 @@ import com.anlohse.minesweeper.commons.entities.GameStatus;
 import com.anlohse.minesweeper.commons.entities.HiScore;
 import com.anlohse.minesweeper.commons.entities.MinesweeperMatch;
 import com.anlohse.minesweeper.commons.entities.User;
+import com.anlohse.minesweeper.commons.exceptions.InvalidRequestException;
 import com.anlohse.minesweeper.commons.exceptions.ResourceNotFoundException;
 import com.anlohse.minesweeper.commons.repositories.MinesweeperMatchRepository;
 import com.anlohse.minesweeper.commons.vo.GameMoveVO;
@@ -27,6 +28,7 @@ public class MatchService extends AbstractCrudService<MinesweeperMatch, Long> {
     private static final int MINE_MASK = 0x01;
     private static final int CLEARED_MASK = 0x02;
     private static final int FLAG_MASK = 0x04;
+    private static final int EXPL_MASK = 0x08;
     private static final int EDGE_MASK = 0xf0;
     private HiScoreService hiScoreService;
 
@@ -66,6 +68,7 @@ public class MatchService extends AbstractCrudService<MinesweeperMatch, Long> {
                 .height(height)
                 .mines(mines)
                 .user(user)
+                .status(GameStatus.PLAYING)
                 .build();
         byte[] data = new byte[width * height];
         Random rnd = new Random(seed);
@@ -122,6 +125,8 @@ public class MatchService extends AbstractCrudService<MinesweeperMatch, Long> {
      */
     public GameMoveVO doMove(Long matchId, int x, int y, boolean mark) {
         MinesweeperMatch match = getRepository().findById(matchId).orElseThrow(ResourceNotFoundException::new);
+        if (match.getStatus() != GameStatus.PLAYING)
+            throw new InvalidRequestException("Game already finished.");
         byte[] data = Base64.decodeBase64(match.getData());
         byte b = getDatum(x, y, data, match.getWidth());
         MoveStatus status = MoveStatus.NONE;
@@ -132,6 +137,7 @@ public class MatchService extends AbstractCrudService<MinesweeperMatch, Long> {
                 b |= CLEARED_MASK; // add the clear status to the cell
                 if ((b & MINE_MASK) != 0) {
                     // if clicked on a mine, then game is over
+                    b |= EXPL_MASK;
                     status = MoveStatus.GAMEOVER;
                     match.setEndTime(new Date());
                     match.setStatus(GameStatus.LOSE);

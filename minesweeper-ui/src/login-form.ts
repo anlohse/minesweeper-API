@@ -1,45 +1,37 @@
-import { LitElement, html, customElement, css } from 'lit-element';
+import { LitElement, html, customElement, property } from 'lit-element';
+import { navigator } from 'lit-element-router';
 import http from './http-service';
+import {style} from './styles';
+
+const TOPIC_NAME = 'minesweeper.credentials';
+const API_ID = 'writer';
+const API_KEY = '123';
 
 @customElement("login-form")
+@navigator
 class LoginForm extends LitElement {
 
 	static get styles() {
-		return css`
-			:host {
-				display: block;
-			}
-			div.container {
-				width: 250px;
-				border: 1px solid #777;
-				margin-left: auto;
-				margin-right: auto;
-				padding: 8px;
-			}
-			div.container div {
-				margin-top: 8px;
-			}
-			label, input, button {
-				display: block;
-			}
-			label {
-				width: 100%;
-			}
-			input {
-				padding: 2px;
-				width:calc(100% - 8px);
-			}
-			button {
-				width:100%;
-			}
-		`;
+		return style;
 	}
+
+	@property()
+	error ?: string;
+
+	@property()
+	newUser : boolean;
+
+	@property()
+	user ?: any;
 
 	render() {
 		return html`
 			<form id="loginForm">
 				<input type="hidden" name="grant_type" value="password" />
 				<div class="container">
+					<div class="error">
+						<h3>${this.error}</h3>
+					</div>
 					<div>
 						<label>Username:</label>
 						<input type="text" name="username"/>
@@ -51,6 +43,9 @@ class LoginForm extends LitElement {
 					<div>
 						<button id="loginbutton" @click="${this.handleLogin}">Login</button>
 					</div>
+					<div>
+						<button id="registerbutton" @click="${this.handleNewUser}">New user</button>
+					</div>
 				</div>
 			</form>
   		`;
@@ -58,6 +53,7 @@ class LoginForm extends LitElement {
 
 	constructor() {
 		super();
+		this.newUser = false;
 	}
 
 	handleLogin(e: any) {
@@ -65,10 +61,22 @@ class LoginForm extends LitElement {
 		let formEl = this.shadowRoot?this.shadowRoot.getElementById('loginForm'):null;
 		if (!formEl) return;
 		var form = new FormData(<HTMLFormElement>formEl);
-		http.post('/oauth/token', { body: form, headers: {"Authorization": "Basic d3JpdGVyOjEyMw=="} })
+		http.post('/oauth/token', { body: form, headers: {"Authorization": "Basic " + btoa(API_ID + ':' + API_KEY)} })
 			.then((res: any) => {
-				console.log(res);
-			});
+				res.json().then((v:any) => {
+					PubSub.publish(TOPIC_NAME,{authToken:v.access_token});
+					(<any>this).navigate("/");
+				});
+			})
+			.catch(((e:any) => {
+				e.response.json().then(((v:any) => this.error = v.error_description).bind(this));
+			}).bind(this));
+	}
+
+	handleNewUser(e: any) {
+		this.error = undefined;
+		e.preventDefault();
+		(<any>this).navigate("/register");
 	}
 
 }

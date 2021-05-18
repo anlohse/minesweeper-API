@@ -6,15 +6,17 @@
   "author": "Alan N. Lohse",
   "license": "ISC",
   "scripts": {
-    "start": "tsc && parcel index.html --open",
+    "start": "tsc && parcel index.html",
     "build": "tsc && parcel build index.html"
   },
   "dependencies": {
     "@webcomponents/webcomponentsjs": "2.2.6",
     "lit-element": "2.3.1",
+    "lit-element-router": "^2.0.3",
     "pubsub-js": "^1.9.3"
   },
   "devDependencies": {
+    "@parcel/transformer-image": "^2.0.0-beta.2",
     "@types/pubsub-js": "^1.8.2",
     "http-proxy-middleware": "^2.0.0",
     "parcel": "^2.0.0-beta.2"
