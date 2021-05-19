@@ -106,14 +106,14 @@ public class UserService  extends AbstractCrudService<User, Long> {
 
     public void resendActivationCode(String email) throws Exception {
         User user = getRepository().findByEmail(email)
-                .orElseThrow(ResourceNotFoundException::new);
+                .orElseThrow(() -> new ResourceNotFoundException("E-Mail not found in the database."));
         generateActivationCode(user);
         repository.save(user);
         emailService.sendMailUser(UserMapper.INSTANCE.userToVO(user), messages.getString("user.activation.subject"), "activation");
     }
 
     public void activate(String activationCode) throws Exception {
-        User user = getRepository().findByActivationCode(activationCode).orElseThrow(ResourceNotFoundException::new);
+        User user = getRepository().findByActivationCode(activationCode).orElseThrow(() -> new ResourceNotFoundException("Activation code not found."));
         if (user.getActivationExpires().before(Date.from(Instant.now()))) {
             throw new InvalidRequestException("user.activation.expired");
         }
@@ -130,14 +130,14 @@ public class UserService  extends AbstractCrudService<User, Long> {
 
     public void generateRecover(String email) throws Exception {
         User user = getRepository().findByEmail(email)
-                .orElseThrow(ResourceNotFoundException::new);
+                .orElseThrow(() -> new ResourceNotFoundException("E-Mail not found in the database."));
         generateRecoverCode(user);
         repository.save(user);
         emailService.sendMailUser(UserMapper.INSTANCE.userToVO(user), messages.getString("user.recovery.subject"), "recovery");
     }
 
     public void recover(String recoverCode, String password, String passwordConfirmation) throws Exception {
-        User user = getRepository().findByRecoveryCode(recoverCode).orElseThrow(ResourceNotFoundException::new);
+        User user = getRepository().findByRecoveryCode(recoverCode).orElseThrow(() -> new ResourceNotFoundException("Recovery code not found."));
         if (!password.equals(passwordConfirmation)) {
             throw new InvalidRequestException("user.password.dont_match");
         }

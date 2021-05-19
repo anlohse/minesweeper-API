@@ -11,6 +11,13 @@ import { Match, UserData } from './types';
 
 const TOPIC_NAME = 'minesweeper.credentials';
 
+const DF_OPTIONS: any = {
+    year: 'numeric', month: 'numeric', day: 'numeric',
+	hour: 'numeric', minute: 'numeric', second: 'numeric'
+};
+
+const dateFormat = new Intl.DateTimeFormat('default', DF_OPTIONS);
+
 @customElement("minesweeper-app")
 @router
 @navigator
@@ -70,6 +77,10 @@ class MinesweeperApp extends LitElement {
 			.App-link {
 				color: #61dafb;
 			}
+			.right-panel {
+				position:absolute;
+				color: #aaa;
+			}
 		`;
 	}
 
@@ -91,10 +102,16 @@ class MinesweeperApp extends LitElement {
 	params: any;
 	@property({ type: Object })
 	query: any;
+	@property({ type: Array })
+	lastGames: [];
+	@property({ type: Array })
+	hiScores: [];
 
 	constructor() {
 		super();
 		this.route = '';
+		this.lastGames = [];
+		this.hiScores = [];
 		const assignUser = ((user: any) => {
 			this.userData = user;
 		}).bind(this);
@@ -105,8 +122,10 @@ class MinesweeperApp extends LitElement {
 					(<any>this).navigate("/login");
 			} else {
 				http.get('/api/user/current', {}).then(resp => resp.json().then(assignUser));
+				http.get('/api/hiscores/user/10', {}).then(resp => resp.json().then(((v:any) => this.lastGames = v).bind(this)));
 			}
 		}).bind(this));
+		http.get('/api/hiscores/10', {}).then(resp => resp.json().then(((v:any) => this.hiScores = v).bind(this)));
 	}
 
 	router(route: string, params: any, query: any, data: any) {
@@ -134,9 +153,35 @@ class MinesweeperApp extends LitElement {
 				  : html`<h1>Not found</h1>`))))
 
 				}
-			
+				<div class="right-panel">
+				${this.userData
+					? html`
+					<div class="records">
+						<h2>Last Games</h2>
+						<ol>
+							${this.lastGames.map((m:any) => html`
+								<li>${this.formatDate(m.matchDate)} - Score: ${m.score}</li>
+							`)}
+						</ol>
+					</div>`
+					: ''
+				}
+					<div class="records">
+						<h2>Hi-Scores</h2>
+						<ol>
+							${this.hiScores.map((m:any) => html`
+								<li>${m.nickname} - ${this.formatDate(m.matchDate)} - Score: ${m.score}</li>
+							`)}
+						</ol>
+					</div>
+				</div>
 			</div>
   		`;
+	}
+
+	formatDate(dt:string) {
+		let d = new Date(dt);
+		return dateFormat.format(d);
 	}
 
 }

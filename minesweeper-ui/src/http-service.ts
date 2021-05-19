@@ -339,8 +339,16 @@ const request = (url:string, options:any) : Promise<Response> => {
                     let error : any = new Error('HTTP status ' + resp.status + ': ' + resp.statusText);
                     error.response = resp;
                     return reject(error);
-                } else
+                } else {
+					let contentType = resp.headers.get(httpheaders.CONTENT_TYPE) || '';
+					let contentLength = parseInt(resp.headers.get(httpheaders.CONTENT_LENGTH) || '0');
+					if (contentType.toLowerCase().startsWith('application/json') && contentLength > 0) {
+						return resp.json()
+							.then(json => resolve(json))
+							.catch(error => reject(error));
+					}
                 	return resolve(resp);
+				}
             })
             .catch(reject);
     });
@@ -399,7 +407,7 @@ const _RestService_create = <TRestBase extends Constructor>(baseUrl:string, Rest
          */
         async create(entity:any, options:any) {
             options = createPostOptions(entity, options);
-            return await (await post(baseUrl, options)).json();
+            return await post(baseUrl, options);
         }
     };
 };
@@ -416,7 +424,7 @@ const _RestService_retrieve = <TRestBase extends Constructor>(baseUrl:string, Re
             params = params || {};
             let headers : any = {};
             headers[httpheaders.ACCEPT] = APPLICATION_JSON_UTF_8;
-            return await (await get(baseUrl, Object.assign({}, options || {}, { params, headers }))).json();
+            return await get(baseUrl, Object.assign({}, options || {}, { params, headers }));
         }
     };
 };
@@ -431,7 +439,7 @@ const _RestService_update = <TRestBase extends Constructor>(baseUrl:string, Rest
          */
         async update(entity:any, options:any) {
             options = createPostOptions(entity, options);
-            return await (await put(baseUrl, options)).json();
+            return await put(baseUrl, options);
         }
     };
 };
@@ -446,7 +454,7 @@ const _RestService_delete = <TRestBase extends Constructor>(baseUrl:string, Rest
          */
         async delete(entity:any, options:any) {
             options = createPostOptions(entity, options);
-            return await (await http_delete(baseUrl, options)).json();
+            return await http_delete(baseUrl, options);
         }
     };
 };

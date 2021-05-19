@@ -23,6 +23,7 @@
         score int4 not null,
         start_time timestamp,
         status int4,
+        timer int4 not null,
         width int4 not null,
         user_id int8,
         primary key (id)

@@ -5,16 +5,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DoMoveVO {
+public class ErrorVO {
 
-    private long matchId;
-    private int x;
-    private int y;
-    private boolean mark;
-    private int timer;
+    private String message;
+
+    private List<ErrorFieldVO> fields = new ArrayList<>();
 
 }

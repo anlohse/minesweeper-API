@@ -31,4 +31,7 @@ export const style = css`
 			.error {
 				color: red;
 			}
+			.error h3 {
+				margin: 0px;
+			}
 		`;

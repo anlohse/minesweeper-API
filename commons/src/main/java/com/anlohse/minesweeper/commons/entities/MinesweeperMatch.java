@@ -41,6 +41,8 @@ public class MinesweeperMatch extends AbstractEntity {
 
     private int score;
 
+    private int timer;
+
     private GameStatus status;
 
     @Lob

@@ -75,7 +75,7 @@ class MineCell extends LitElement {
 	index: number = 0;
 
 	@property({
-		type: "Array"
+		type: "Number"
 	})
 	data: number = 0;
 

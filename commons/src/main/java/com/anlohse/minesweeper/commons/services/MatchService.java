@@ -123,7 +123,7 @@ public class MatchService extends AbstractCrudService<MinesweeperMatch, Long> {
      * @param mark true to mark a flag
      * @return an object with a match and a status
      */
-    public GameMoveVO doMove(Long matchId, int x, int y, boolean mark) {
+    public GameMoveVO doMove(Long matchId, int x, int y, boolean mark, int timer) {
         MinesweeperMatch match = getRepository().findById(matchId).orElseThrow(ResourceNotFoundException::new);
         if (match.getStatus() != GameStatus.PLAYING)
             throw new InvalidRequestException("Game already finished.");
@@ -152,24 +152,35 @@ public class MatchService extends AbstractCrudService<MinesweeperMatch, Long> {
                     } else {
                         status = MoveStatus.RISKY;
                     }
-                    if (checkWin(data)) {
-                        match.setStatus(GameStatus.WIN);
-                        match.setEndTime(new Date());
-                        status = MoveStatus.WIN;
-                        match.setScore((int) (1000_000 / (match.getEndTime().getTime() - match.getStartTime().getTime())));
-                        HiScore hiScore = HiScore.builder()
-                                .match(match)
-                                .user(match.getUser())
-                                .build();
-                        hiScoreService.save(hiScore);
-                    }
                 }
             }
         }
         setDatum(x, y, data, match.getWidth(), b);
+        if (status == MoveStatus.GAMEOVER) {
+            showMones(data);
+        }
+        match.setTimer(timer);
+        if (checkWin(data)) {
+            match.setStatus(GameStatus.WIN);
+            match.setEndTime(new Date());
+            status = MoveStatus.WIN;
+            match.setScore((int) (1000_000 / (match.getTimer() + 1)));
+            HiScore hiScore = HiScore.builder()
+                    .match(match)
+                    .user(match.getUser())
+                    .build();
+            hiScoreService.save(hiScore);
+        }
         match.setData(Base64.encodeBase64String(data));
         match = save(match);
         return new GameMoveVO(INSTANCE.matchToVO(match), status);
+    }
+
+    private void showMones(byte[] data) {
+        for (int i = 0; i < data.length; i++) {
+            if ((data[i] & MINE_MASK) != 0 && (data[i] & CLEARED_MASK) == 0)
+                data[i] ^= CLEARED_MASK;
+        }
     }
 
     private boolean checkWin(byte[] data) {

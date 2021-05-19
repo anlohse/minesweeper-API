@@ -29,7 +29,7 @@ public class UserController {
 
 	@PreAuthorize("!hasAuthority('SCOPE_user')")
 	@PostMapping
-	public ResponseEntity<UserVO> createNew(@RequestBody @Valid UserVO user) throws Exception {
+	public ResponseEntity<UserVO> createNew(@Valid @RequestBody UserVO user) throws Exception {
 		userService.createNew(user);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
@@ -43,7 +43,7 @@ public class UserController {
 
 	@PreAuthorize("hasAuthority('SCOPE_user')")
 	@PatchMapping
-	public ResponseEntity<UserVO> update(@RequestBody @Valid UserVO user) {
+	public ResponseEntity<UserVO> update(@Valid @RequestBody UserVO user) {
 		userService.update(user);
 		return ResponseEntity.ok().build();
 	}

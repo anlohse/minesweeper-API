@@ -30,8 +30,9 @@ class ActivationForm extends LitElement {
 					<input type="text" name="code" .value="${this.code}" @change="${this.changeCode}"/>
 				</div>
 				<div>
-					<button id="sendbutton" @click="${this.handleActivation}">Send</button>
+					<button id="sendbutton" @click="${this.handleActivation}">Activate</button>
 				</div>
+				<br/>
 				<div>
 					<label>E-Mail:</label>
 					<input type="text" name="email" @change="${this.changeMail}"/>

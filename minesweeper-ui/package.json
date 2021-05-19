@@ -7,7 +7,9 @@
   "license": "ISC",
   "scripts": {
     "start": "tsc && parcel index.html",
-    "build": "tsc && parcel build index.html"
+    "build": "tsc && parcel build index.html",
+	"clean": "rimraf js/* dist/* .parcel-cache/*"
+
   },
   "dependencies": {
     "@webcomponents/webcomponentsjs": "2.2.6",
@@ -19,7 +21,8 @@
     "@parcel/transformer-image": "^2.0.0-beta.2",
     "@types/pubsub-js": "^1.8.2",
     "http-proxy-middleware": "^2.0.0",
-    "parcel": "^2.0.0-beta.2"
+    "parcel": "^2.0.0-beta.2",
+    "rimraf": "^3.0.2"
   },
   "keywords": []
 }

@@ -9,12 +9,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DoMoveVO {
+public class ErrorFieldVO {
 
-    private long matchId;
-    private int x;
-    private int y;
-    private boolean mark;
-    private int timer;
+    private String id;
+    private String message;
 
 }

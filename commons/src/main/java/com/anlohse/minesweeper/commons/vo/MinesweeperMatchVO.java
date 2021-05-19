@@ -32,6 +32,8 @@ public class MinesweeperMatchVO {
 
     private int cleared;
 
+    private int timer;
+
     private GameStatus status;
 
     private String data;
