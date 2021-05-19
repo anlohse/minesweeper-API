@@ -33,6 +33,9 @@ public class UserService  extends AbstractCrudService<User, Long> {
     @Value("${minesweeper.config.salty.recover}")
     private String recoverSalty;
 
+    @Value("${minesweeper.config.autoActivate}")
+    private Boolean autoActivateUser;
+
     @Autowired
     private EmailService emailService;
 
@@ -75,9 +78,16 @@ public class UserService  extends AbstractCrudService<User, Long> {
     public void createNew(UserVO userVo) throws Exception {
         User user = UserMapper.INSTANCE.voToUser(userVo);
         user.setPassword(passwordEncoder.encode(userVo.getPassword()));
-        generateActivationCode(user);
+        if (autoActivateUser) {
+            user.setActivationCode(null);
+            user.setActivationExpires(new Date());
+        } else {
+            generateActivationCode(user);
+        }
         user = this.save(user);
-        emailService.sendMailUser(UserMapper.INSTANCE.userToVO(user), messages.getString("user.activation.subject"), "activation");
+        if (!autoActivateUser) {
+            emailService.sendMailUser(UserMapper.INSTANCE.userToVO(user), messages.getString("user.activation.subject"), "activation");
+        }
     }
 
     private void generateActivationCode(User user) {

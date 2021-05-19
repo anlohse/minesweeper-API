@@ -2,6 +2,7 @@ minesweeper:
   siteName: Minesweeper-io
   siteAddress: 'http://localhost:1234'
   config:
+    autoActivate: true
     salty:
       password: '@maven.salty.password@'
       activation: '@maven.salty.activation@'

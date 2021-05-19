@@ -24,7 +24,7 @@ public class TemplateService {
 	
 	public TemplateService() throws Exception {
         cfg = new Configuration(Configuration.VERSION_2_3_28);
-        cfg.setDirectoryForTemplateLoading(new File(TemplateService.class.getResource("/templates").toURI()));
+        cfg.setClassForTemplateLoading(TemplateService.class, "/templates");
         cfg.setDefaultEncoding("UTF-8");
         cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         cfg.setLogTemplateExceptions(false);
